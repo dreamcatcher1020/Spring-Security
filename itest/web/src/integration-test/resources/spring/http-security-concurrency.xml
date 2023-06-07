@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright 2002-2022 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+
+	<debug />
+
+	<!--
+	   Http App Context to test form login, remember-me and concurrent session control.
+	   Needs to be supplemented with authentication provider(s)
+	-->
+	<http pattern="/login.jsp" security="none" />
+
+	<http>
+		<intercept-url pattern="/secure/**" access="hasAnyRole('ROLE_DEVELOPER','ROLE_USER')" />
+		<intercept-url pattern="/**" access="hasAnyRole('ROLE_DEVELOPER','ROLE_USER')" />
+
+		<form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=true"/>
+		<http-basic/>
+
+		<!-- Default logout configuration -->
+		<logout logout-url="/logout"/>
+
+		<session-management>
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+		</session-management>
+
+		<csrf disabled="true"/>
+	</http>
+
+	<beans:bean class="org.springframework.web.servlet.handler.HandlerMappingIntrospector" name="mvcHandlerMappingIntrospector"/>
+
+</beans:beans>

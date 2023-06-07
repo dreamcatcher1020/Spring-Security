@@ -1,0 +1,7 @@
+[[exploits]]
+= Protection Against Exploits
+:page-section-summary-toc: 1
+
+Spring Security provides protection against common exploits.
+Whenever possible, the protection is enabled by default.
+This section describes the various exploits that Spring Security protects against.
